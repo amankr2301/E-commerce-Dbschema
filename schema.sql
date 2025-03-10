@@ -85,45 +85,6 @@ CREATE TABLE product_options (
 );
 
 
--- *************************************** queries ***********************************************************************
-
---  1. Retrieving top-selling medicines per region.
-
-EXPLAIN ANALYZE
-WITH RankedProducts AS (
-    SELECT 
-        c.country AS region,
-        p.name AS medicine_name,
-        p.sku,
-        SUM(od.quantity) AS total_quantity_sold,
-        RANK() OVER (PARTITION BY c.country ORDER BY SUM(od.quantity) DESC) AS sales_rank
-    FROM orders o
-    JOIN customers c ON o.customer_id = c.id
-    JOIN order_details od ON o.id = od.order_id
-    JOIN products p ON od.product_id = p.id
-    WHERE o.order_status = 'Completed'
-    GROUP BY c.country, p.id, p.name, p.sku
-)
-SELECT 
-    region,
-    medicine_name,
-    sku,
-    total_quantity_sold
-FROM RankedProducts
-WHERE sales_rank = 1
-ORDER BY region, total_quantity_sold DESC;
-
-
-
-
--- 3.  
-
-SELECT c.id, c.full_name, COUNT(o.id) AS total_orders
-FROM customers c
-JOIN orders o ON c.id = o.customer_id
-GROUP BY c.id, c.full_name
-ORDER BY total_orders DESC;
-
 
 
 
