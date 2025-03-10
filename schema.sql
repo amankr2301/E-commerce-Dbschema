@@ -114,27 +114,7 @@ WHERE sales_rank = 1
 ORDER BY region, total_quantity_sold DESC;
 
 
---  2. 
 
-SELECT 
-    p.id,
-    p.name,
-    p.sku,
-    p.stock AS current_stock,
-    COALESCE(SUM(od.quantity), 0) AS total_quantity_sold,
-    COALESCE(SUM(od.quantity * od.price), 0) AS cogs,
-    p.stock AS average_inventory,
-    COALESCE(SUM(od.quantity), 0) / NULLIF(p.stock, 0) AS inventory_turnover_rate
-FROM 
-    products p
-LEFT JOIN 
-    order_details od ON p.id = od.product_id
-LEFT JOIN 
-    orders o ON od.order_id = o.id AND o.order_status = 'Completed'
-GROUP BY 
-    p.id, p.name, p.sku, p.stock
-ORDER BY 
-    inventory_turnover_rate DESC;
 
 -- 3.  
 
