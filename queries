@@ -1,18 +1,17 @@
 --  1. Retrieving top-selling medicines per region.
 
 EXPLAIN ANALYZE
-WITH RankedProducts AS (
+WITH TopSellingProducts AS (
     SELECT 
         c.country AS region,
-        p.name AS medicine_name,
+        p.name AS medicine_name,  -- Referring to the product name in the 'products' table
         p.sku,
         SUM(od.quantity) AS total_quantity_sold,
-        RANK() OVER (PARTITION BY c.country ORDER BY SUM(od.quantity) DESC) AS sales_rank
+        DENSE_RANK() OVER (PARTITION BY c.country ORDER BY SUM(od.quantity) DESC) AS product_rank
     FROM orders o
     JOIN customers c ON o.customer_id = c.id
     JOIN order_details od ON o.id = od.order_id
     JOIN products p ON od.product_id = p.id
-    WHERE o.order_status = 'Completed'
     GROUP BY c.country, p.id, p.name, p.sku
 )
 SELECT 
@@ -20,9 +19,10 @@ SELECT
     medicine_name,
     sku,
     total_quantity_sold
-FROM RankedProducts
-WHERE sales_rank = 1
+FROM TopSellingProducts
+WHERE product_rank = 1
 ORDER BY region, total_quantity_sold DESC;
+
 
 --  2. ******************************************Calculating inventory turnover rate.*****************************************************
 
