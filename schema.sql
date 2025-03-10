@@ -32,7 +32,7 @@ CREATE TABLE products (
     stock INT NOT NULL
 ); 
 
--- RELATION WITH PRODUCTS AND CATEGORIES 
+
 
 CREATE TABLE product_categories (
     id INT AUTO_INCREMENT PRIMARY KEY, 
@@ -42,7 +42,6 @@ CREATE TABLE product_categories (
     FOREIGN KEY (category_id) REFERENCES categories(id)
 ); 
 
--- RELATION WITH CUSTOMERS 
 
 CREATE TABLE orders (
     id INT AUTO_INCREMENT PRIMARY KEY, 
@@ -56,7 +55,6 @@ CREATE TABLE orders (
     FOREIGN KEY (customer_id) REFERENCES customers(id)
 ); 
 
---  RELATION WITH ORDERS AND PRODUCTS 
 
 CREATE TABLE order_details (
     id INT AUTO_INCREMENT PRIMARY KEY, 
