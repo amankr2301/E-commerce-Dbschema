@@ -4,7 +4,7 @@ EXPLAIN ANALYZE
 WITH TopSellingProducts AS (
     SELECT 
         c.country AS region,
-        p.name AS medicine_name,  -- Referring to the product name in the 'products' table
+        p.name AS medicine_name,  
         p.sku,
         SUM(od.quantity) AS total_quantity_sold,
         DENSE_RANK() OVER (PARTITION BY c.country ORDER BY SUM(od.quantity) DESC) AS product_rank
